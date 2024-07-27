@@ -2,7 +2,6 @@ using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Rendering.VirtualTexturing;
 
 public class SystemGenerator : MonoBehaviour
 {
@@ -28,6 +27,18 @@ public class SystemGenerator : MonoBehaviour
             //set player start point to system
             //add x base amount of units in system
         }
+    }
+
+    public PlanetarySystem[] FindSystemByOwner(EntityData entity)
+    {
+        List<PlanetarySystem> systems = new List<PlanetarySystem>();
+
+        foreach (PlanetarySystem s in planetarySystems)
+        {
+            //find and add system to systems
+        }
+
+        return systems.ToArray();
     }
     public void GenerateSystems(int amount, int playerCount, Vector3 limits)
     {
