@@ -7,6 +7,7 @@ public class SystemGenerator : MonoBehaviour
 {
     List<PlanetarySystem> planetarySystems = new List<PlanetarySystem>();
 
+    [SerializeField] PlanetarySystemData[] planetarySystemDatas;
     [SerializeField] GameObject systemPrefab;
     [SerializeField] Transform systemParent;
 
@@ -19,13 +20,25 @@ public class SystemGenerator : MonoBehaviour
     [SerializeField] GameObject lineRendererPrefab;
     [SerializeField] Transform lineRendererParent;
 
-    void InitializeEntities(int playerCount /*change parameter for a Entity class array later*/)
+    void InitializeEntities(EntityData[] entities)
     {
-        for (int i = 0; i < playerCount; i++)
+        for (int i = 0; i < entities.Length; i++)
         {
-            //get random system
-            //set player start point to system
-            //add x base amount of units in system
+            if (entities[i] == null) continue;
+
+            while (true)
+            {
+                //get random system & set player start point to system
+                PlanetarySystem randomSystem = planetarySystems[Random.Range(0, planetarySystems.Count)];
+
+                if (randomSystem.GetEntity() != null) continue;
+
+                randomSystem.SetSystemEntity(entities[i]);
+                
+                //Set x amount of starting units
+                randomSystem.SetSystemUnits();
+                break;
+            }
         }
     }
 
@@ -33,14 +46,15 @@ public class SystemGenerator : MonoBehaviour
     {
         List<PlanetarySystem> systems = new List<PlanetarySystem>();
 
+        //find and add system to systems
         foreach (PlanetarySystem s in planetarySystems)
         {
-            //find and add system to systems
+            if (s.GetEntity() == entity) systems.Add(s);
         }
 
         return systems.ToArray();
     }
-    public void GenerateSystems(int amount, int playerCount, Vector3 limits)
+    public void GenerateSystems(int amount, Vector3 limits, EntityData[] entities)
     {
         if (planetarySystems.Count > 0) return;
 
@@ -62,21 +76,32 @@ public class SystemGenerator : MonoBehaviour
             //instantiate system
             PlanetarySystem system = Instantiate(systemPrefab, systemPosition, Quaternion.identity).GetComponent<PlanetarySystem>();
             system.transform.SetParent(systemParent);
-
-            system.FindNearbySystems(systemDetectionRadius);
+            
+            //set random system type
+            system.SetSystemType(planetarySystemDatas[Random.Range(0, planetarySystemDatas.Length)]);
 
             //add system to planetarySystems list
             planetarySystems.Add(system);
         }
-    }
 
-    public void RegenerateSystems(int amount, int playerCount, Vector3 limits)
+        FindSystemsNeighbors();
+
+        InitializeEntities(entities);
+    }
+    void FindSystemsNeighbors()
+    {
+        foreach (PlanetarySystem system in planetarySystems)
+        {
+            system.FindNearbySystems(systemDetectionRadius);
+        }
+    }
+    public void RegenerateSystems(int amount, Vector3 limits, EntityData[] entities)
     {
         if (planetarySystems.Count < 1) return;
 
         ResetSystems();
 
-        GenerateSystems(amount, playerCount, limits);
+        GenerateSystems(amount, limits, entities);
     }
     public void ResetSystems()
     {

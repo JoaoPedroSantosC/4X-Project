@@ -16,3 +16,10 @@ public class BuildingData : ScriptableObject
     public SerializedDictionary<ProcessedResourceTypes, uint> buildingProductionPerTick;
 
 }
+
+public enum BuildingType
+{
+    Mining,
+    CloningFacility,
+
+}

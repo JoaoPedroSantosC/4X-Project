@@ -2,6 +2,7 @@ using AYellowpaper.SerializedCollections;
 using NaughtyAttributes;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class PlanetarySystem : MonoBehaviour
@@ -9,7 +10,7 @@ public class PlanetarySystem : MonoBehaviour
     List<PlanetarySystem> nearbySystems;
 
     //Owning entity here
-    EntityData owningEntity;
+    EntityData owningEntity = null;
 
     //Units here
     [SerializedDictionary("Unit Type", "Amount Available")]
@@ -20,19 +21,22 @@ public class PlanetarySystem : MonoBehaviour
     public SerializedDictionary<RawResourceTypes, uint> resources;
 
     //Buildings here
-    List<Building> buildings;
+    List<Building> buildings = new List<Building>();
 
     //Stored energy (in MJoules)
-    int storedEnergy = 0;
+    int storedEnergy = 9999;
 
     GameObject selectionLines;
 
-    public event WorldController.Tick ProduceEvent;
-    public event WorldController.Tick ConsumeEvent;
+    public event WorldController.Tick ProduceEvent = null;
+    public event WorldController.Tick ConsumeEvent = null;
+
+    //Debugging
+    bool detectionRangeDebuggingOn = false;
 
     private void Start()
     {
-        selectionLines = transform.GetChild(0).gameObject;
+        SetSelectionLines();
 
         //ProduceEvent += () => { Debug.Log("Produce test"); };
         //ConsumeEvent += () => { Debug.Log("Consume test"); };
@@ -40,13 +44,21 @@ public class PlanetarySystem : MonoBehaviour
         WorldController.instance.ProduceTick += ProduceEvent;
         WorldController.instance.ConsumeTick += ConsumeEvent;
     }
+    void OnDisable()
+    {
+        WorldController.instance.ProduceTick -= ProduceEvent;
+        WorldController.instance.ConsumeTick -= ConsumeEvent;
+    }
+
     public void FindNearbySystems(float radius)
     {
         nearbySystems = new List<PlanetarySystem>();
 
         foreach (Collider c in Physics.OverlapSphere(transform.position, radius, WorldController.instance.GetSystemLayerMask()))
         {
-            if (c.gameObject == gameObject) continue;
+            if (c.gameObject.transform == gameObject.transform) continue;
+
+            //Debug.Log("Detected system: " + c.gameObject.name, c.gameObject);
 
             nearbySystems.Add(c.GetComponent<PlanetarySystem>());
         }
@@ -65,8 +77,10 @@ public class PlanetarySystem : MonoBehaviour
         WorldController.instance.ConsumeTick -= ConsumeEvent;
 
         //add building
-        gameObject.AddComponent(buildingClass.GetType());
-        Building building = GetComponent<Building>();
+        Building building = (Building)gameObject.AddComponent(buildingClass.GetType());
+        buildings.Add(building);
+
+        SetBuildingStocks();
 
         ConsumeEvent += building.Consume;
 
@@ -81,30 +95,70 @@ public class PlanetarySystem : MonoBehaviour
         resources[resource] -= amount;
     }
 
-    public void SetSystemType()
+    public void SetSystemType(PlanetarySystemData systemData)
     {
-
+        resources = systemData.data;
     }
     public void SetSystemEntity(EntityData entity)
     {
-        owningEntity = entity;
-
-        if (owningEntity == null)
+        if (entity == null)
         {
+            //resets events in case this system is set to not be owned by any entity
             WorldController.instance.ProduceTick -= ProduceEvent;
             WorldController.instance.ConsumeTick -= ConsumeEvent;
+
+            selectionLines.SetActive(false);
+
+            return;
         }
+
+        owningEntity = entity;
+
+        //for debugging purposes
+        if (selectionLines == null) SetSelectionLines();
+        selectionLines.SetActive(true);
+
+        SetBuildingStocks();
+
+        WorldController.instance.ProduceTick += ProduceEvent;
+        WorldController.instance.ConsumeTick += ConsumeEvent;
+    }
+
+    public void SetBuildingStocks()
+    {
+        if (buildings.Count <= 0) return;
+
+        foreach (Building b in buildings)
+        {
+            if (owningEntity == EntityController.instance.GetPlayerEntity())
+            {
+                b.SetEntityStock(PlayerStock.instance);
+            }
+            else
+            {
+                b.SetEntityStock(AIStock.instance);
+            }
+        }
+    }
+    public void SetSystemUnits()
+    {
+
+    }
+    void SetSelectionLines()
+    {
+        selectionLines = transform.GetChild(0).gameObject;
+    }
+
+    public EntityData GetEntity()
+    {
+        return owningEntity;
     }
     public uint GetAvailableResourceAmount(RawResourceTypes resource)
     {
         return resources[resource];
     }
 
-    void OnDisable()
-    {
-        WorldController.instance.ProduceTick -= ProduceEvent;
-        WorldController.instance.ConsumeTick -= ConsumeEvent;
-    }
+    
 
     #region Energy
 
@@ -139,6 +193,19 @@ public class PlanetarySystem : MonoBehaviour
     public void DebugCastSphere()
     {
         print(nearbySystems.Count);
+    }
+
+    [Button("Debug System Detection Range", EButtonEnableMode.Playmode)]
+    public void DebugRangeDetection()
+    {
+        detectionRangeDebuggingOn = !detectionRangeDebuggingOn;
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (!detectionRangeDebuggingOn) return;
+        
+        Gizmos.DrawWireSphere(transform.position, 4f);
     }
     #endregion
 }

@@ -7,9 +7,13 @@ using AYellowpaper.SerializedCollections;
 public class PlanetarySystemData : ScriptableObject
 {
     [SerializedDictionary("System Type", "Resources")]
-    public AYellowpaper.SerializedCollections.SerializedDictionary<SystemType, AYellowpaper.SerializedCollections.SerializedDictionary<RawResourceTypes, uint>> data;
+    public SerializedDictionary<RawResourceTypes, uint> data;
+    //public SerializedDictionary<SystemType, SerializedDictionary<RawResourceTypes, uint>> data;
 }
 public enum SystemType
 {
-
+    Balanced,
+    NonmetalAbundant,
+    MetalAbundant,
+    GasAbundant,
 }
