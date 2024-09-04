@@ -12,7 +12,7 @@ public class EntityData : ScriptableObject
     [Space]
 
     public float unitProduction = 1f;
-    public float unitLifeDurationMultiplier = 1f;
+    public float unitLifetimeMultiplier = 1f;
 
     [SerializedDictionary("Resource", "Multiplier")]
     public SerializedDictionary<RawResourceTypes, float> productionMultipliers;

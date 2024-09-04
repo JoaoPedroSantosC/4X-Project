@@ -20,7 +20,7 @@ public class SystemGenerator : MonoBehaviour
     [SerializeField] GameObject lineRendererPrefab;
     [SerializeField] Transform lineRendererParent;
 
-    void InitializeEntities(EntityData[] entities)
+    void InitializeEntities(EntityData[] entities) //Update this to set the initial position to the farthest systems
     {
         for (int i = 0; i < entities.Length; i++)
         {
@@ -36,7 +36,7 @@ public class SystemGenerator : MonoBehaviour
                 randomSystem.SetSystemEntity(entities[i]);
                 
                 //Set x amount of starting units
-                randomSystem.SetSystemUnits();
+                randomSystem.SetSystemUnits(UnitTypes.Production, 100, 30f);
                 break;
             }
         }

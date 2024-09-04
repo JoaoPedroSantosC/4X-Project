@@ -133,10 +133,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   units:
-    _serializedList: []
+    _serializedList:
+    - Key: 0
+      Value: 0
+    - Key: 1
+      Value: 0
+    - Key: 2
+      Value: 0
   resources:
     _serializedList: []
-  storedEnergy: 0
 --- !u!198 &6733620556304663750
 ParticleSystem:
   m_ObjectHideFlags: 0

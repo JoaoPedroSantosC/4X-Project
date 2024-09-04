@@ -39,10 +39,9 @@ public class EntityStock : MonoBehaviour
 
 public enum UnitTypes
 {
-    Total,
+    Production,
     Offensive,
     Defensive,
-    Production
 }
 public enum RawResourceTypes
 {

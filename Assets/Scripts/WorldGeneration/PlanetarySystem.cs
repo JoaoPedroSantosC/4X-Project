@@ -15,6 +15,8 @@ public class PlanetarySystem : MonoBehaviour
     //Units here
     [SerializedDictionary("Unit Type", "Amount Available")]
     public SerializedDictionary<UnitTypes, uint> units;
+    [ReadOnly]
+    uint totalAmountUnits = 0;
 
     //Available resources
     [SerializedDictionary("Raw Resource Type", "Amount Available")]
@@ -87,6 +89,22 @@ public class PlanetarySystem : MonoBehaviour
         //WorldController.instance.ProduceTick += ProduceEvent;
         WorldController.instance.ConsumeTick += ConsumeEvent;
     }
+    public void SetBuildingStocks()
+    {
+        if (buildings.Count <= 0) return;
+
+        foreach (Building b in buildings)
+        {
+            if (owningEntity == EntityController.instance.GetPlayerEntity())
+            {
+                b.SetEntityStock(PlayerStock.instance);
+            }
+            else
+            {
+                b.SetEntityStock(AIStock.instance);
+            }
+        }
+    }
 
     public void ConsumeResource(RawResourceTypes resource, uint amount)
     {
@@ -124,26 +142,23 @@ public class PlanetarySystem : MonoBehaviour
         WorldController.instance.ConsumeTick += ConsumeEvent;
     }
 
-    public void SetBuildingStocks()
+    public void SetSystemUnits(UnitTypes unit, uint amount, float lifetime)
     {
-        if (buildings.Count <= 0) return;
+        units[unit] += amount;
+        totalAmountUnits = units[unit];
 
-        foreach (Building b in buildings)
-        {
-            if (owningEntity == EntityController.instance.GetPlayerEntity())
-            {
-                b.SetEntityStock(PlayerStock.instance);
-            }
-            else
-            {
-                b.SetEntityStock(AIStock.instance);
-            }
-        }
+        //invoke die method for the units
+        StartCoroutine(KillSystemUnits(unit, amount, lifetime));
     }
-    public void SetSystemUnits()
+    public IEnumerator KillSystemUnits(UnitTypes unit, uint amount, float unitLifetime)
     {
+        if (units[unit] <= 0) yield return null;
 
+        yield return new WaitForSeconds(unitLifetime);
+        units[unit] = (uint)Mathf.Clamp(units[unit] - amount, 0, 9999);
     }
+
+
     void SetSelectionLines()
     {
         selectionLines = transform.GetChild(0).gameObject;
@@ -188,17 +203,20 @@ public class PlanetarySystem : MonoBehaviour
         Mining m = new Mining();
         AddBuilding(m);
     }
-
     [Button("Debug System Detection", EButtonEnableMode.Playmode)]
     public void DebugCastSphere()
     {
         print(nearbySystems.Count);
     }
-
     [Button("Debug System Detection Range", EButtonEnableMode.Playmode)]
     public void DebugRangeDetection()
     {
         detectionRangeDebuggingOn = !detectionRangeDebuggingOn;
+    }
+    [Button("Debug Unit Production", EButtonEnableMode.Playmode)]
+    public void DebugUnitProduction()
+    {
+        SetSystemUnits(UnitTypes.Offensive, 30, 10f);
     }
 
     private void OnDrawGizmos()
@@ -208,4 +226,5 @@ public class PlanetarySystem : MonoBehaviour
         Gizmos.DrawWireSphere(transform.position, 4f);
     }
     #endregion
+
 }
