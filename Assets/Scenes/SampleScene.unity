@@ -155,6 +155,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   planetarySystemDatas:
   - {fileID: 11400000, guid: fbd517d20e6656c41a3c37e2a257da5f, type: 2}
+  - {fileID: 11400000, guid: e675b9dc56e49ac41bf0d4d85d058e0b, type: 2}
+  - {fileID: 11400000, guid: ae4c40ab36b62364caa9c57238d5a9e6, type: 2}
+  - {fileID: 11400000, guid: 07b4c51c57db11a4cb99f0bdf9515bd0, type: 2}
+  - {fileID: 11400000, guid: 75ca5c4a2b50df144ac7372b3333ef41, type: 2}
+  - {fileID: 11400000, guid: 5b3fdfbeba9b08142b99fd2886f291d0, type: 2}
+  - {fileID: 11400000, guid: 352ae2bcd091903479c72d17e1b6ba63, type: 2}
   systemPrefab: {fileID: 3016218413645738208, guid: ccfd85e5c01279b4e820cd167a7b028e,
     type: 3}
   systemParent: {fileID: 298441490}

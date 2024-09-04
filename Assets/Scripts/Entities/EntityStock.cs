@@ -50,12 +50,20 @@ public enum RawResourceTypes
     Hydrogen,
     Helium,
     Nitrogen,
+    Silicon,
+    Sulfur,
+    Magnesium,
+    Calcium,
     Carbon,
     Copper,
     Iron,
+    Gold,
     Lithium,
+    Aluminum,
     Titanium,
-    Silicon,
+    Uranium,
+    Lead,
+    ExoticMatter,
 }
 public enum ProcessedResourceTypes
 {
