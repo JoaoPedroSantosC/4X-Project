@@ -58,6 +58,14 @@ public abstract class Building : MonoBehaviour
 
             owningEntityStock.AddResource(entry.Key, entry.Value);
         }
+
+        //add data production units to system
+        foreach (var entry in data.buildingUnitProductionPerTick)
+        {
+            if (entry.Value == 0) continue;
+
+            system.SetSystemUnits(entry.Key, (int)entry.Value, 60f, true);
+        }
     }
 
     public bool CanConsume()

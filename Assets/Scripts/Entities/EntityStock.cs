@@ -10,9 +10,18 @@ public class EntityStock : MonoBehaviour
     [SerializedDictionary("Unit Type", "Amount Available")]
     public SerializedDictionary<UnitTypes, uint> units;
 
+    [SerializeField][ReadOnly] uint totalUnits = 0;
+
     //processed resources
     [SerializedDictionary("Processed Resource Type", "Amount Available")]
     public SerializedDictionary<ProcessedResourceTypes, uint> resources;
+
+    public void SetUnits(UnitTypes unit, int amount)
+    {
+        units[unit] = (uint)Mathf.Clamp(units[unit] + amount, 0, 999);
+
+        totalUnits = (uint)(totalUnits + amount);
+    }
 
     public void ConsumeResource(ProcessedResourceTypes resource, uint amount)
     {
@@ -23,7 +32,6 @@ public class EntityStock : MonoBehaviour
 
         //updade ui
     }
-
     public void AddResource(ProcessedResourceTypes resource, uint amount)
     {
         resources[resource] += amount;

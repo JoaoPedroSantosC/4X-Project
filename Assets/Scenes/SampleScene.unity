@@ -197,7 +197,7 @@ MonoBehaviour:
     - Key: 0
       Value: {fileID: 11400000, guid: 02e7b4e93c25aa24cbfb9c685e1778e4, type: 2}
     - Key: 1
-      Value: {fileID: 0}
+      Value: {fileID: 11400000, guid: f1c0774c393158141b34e7871d324033, type: 2}
 --- !u!4 &234479913
 Transform:
   m_ObjectHideFlags: 0
@@ -647,8 +647,7 @@ MonoBehaviour:
       Value: 0
     - Key: 2
       Value: 0
-    - Key: 3
-      Value: 0
+  totalUnits: 0
   resources:
     _serializedList:
     - Key: 0
@@ -681,8 +680,7 @@ MonoBehaviour:
       Value: 0
     - Key: 2
       Value: 0
-    - Key: 3
-      Value: 0
+  totalUnits: 0
   resources:
     _serializedList:
     - Key: 0

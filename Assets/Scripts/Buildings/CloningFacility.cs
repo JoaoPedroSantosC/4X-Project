@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CloningFacility : MonoBehaviour
+public class CloningFacility : Building
 {
-    // Start is called before the first frame update
-    void Start()
+    new void Awake()
     {
-        
+        base.Awake();
+        SetData(WorldController.instance.GetBuildingData(BuildingType.CloningFacility));
     }
-
-    // Update is called once per frame
-    void Update()
+    void OnEnable()
     {
-        
+        //Set energy consumption
+        //energyConsumption = 0;
     }
 }

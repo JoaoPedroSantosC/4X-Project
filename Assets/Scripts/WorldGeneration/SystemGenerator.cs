@@ -36,7 +36,7 @@ public class SystemGenerator : MonoBehaviour
                 randomSystem.SetSystemEntity(entities[i]);
                 
                 //Set x amount of starting units
-                randomSystem.SetSystemUnits(UnitTypes.Production, 100, 30f);
+                randomSystem.SetSystemUnits(UnitTypes.Production, 100, 30f, true);
                 break;
             }
         }

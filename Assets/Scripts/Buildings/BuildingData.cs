@@ -15,6 +15,8 @@ public class BuildingData : ScriptableObject
     [SerializedDictionary("Processed Resource", "Amount produced")]
     public SerializedDictionary<ProcessedResourceTypes, uint> buildingProductionPerTick;
 
+    [SerializedDictionary("Processed Resource", "Amount produced")]
+    public SerializedDictionary<UnitTypes, uint> buildingUnitProductionPerTick;
 }
 
 public enum BuildingType

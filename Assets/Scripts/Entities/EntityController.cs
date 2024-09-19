@@ -14,6 +14,15 @@ public class EntityController : MonoBehaviour
         instance = this;
     }
 
+    public EntityStock FindStockByEntityData(EntityData data)
+    {
+        if (data == playerEntity) return PlayerStock.instance;
+
+        if (data == aiEntity) return AIStock.instance;
+
+        return null;
+    }
+
     public void SetPlayerEntity(EntityData entity)
     {
         playerEntity = entity;
